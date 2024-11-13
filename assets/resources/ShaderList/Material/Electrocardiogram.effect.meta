@@ -1,0 +1,11 @@
+{
+  "ver": "1.0.15",
+  "uuid": "3c4c81ba-5884-4e78-b482-f5d033ef3f94",
+  "compiledShaders": [
+    {
+      "vert": "\n#define _IS_VERT_SHADER 1\n\n  precision highp float;\n\n  uniform mat4 cc_matViewProj;\n  attribute vec3 a_position;\n  attribute lowp vec4 a_color;\n  attribute mediump vec2 a_uv0;\n  varying mediump vec2 v_uv0;\n  varying lowp vec4 v_color;\n\n  void main () {\n    vec4 pos = vec4(a_position, 1);\n    pos = cc_matViewProj * pos;\n\n    v_uv0 = a_uv0;\n    v_color = a_color;\n\n    gl_Position = pos;\n  }\n\n\n",
+      "frag": "\n#define _IS_FRAG_SHADER 1\n\n  precision highp float;\n\n  uniform sampler2D texture;\n  varying mediump vec2 v_uv0;\n  varying lowp vec4 v_color;\n\n  uniform vec2 c_resolution;\n  uniform float c_time;\n\n  \n  void mainImage( out vec4 fragColor, in vec2 fragCoord, vec2 iResolution, float iTime )\n  {\n    vec2 uv = (-iResolution.xy + 2.0 * fragCoord.xy) / iResolution.y;\n    vec2 uv2 = uv;\n    \n    uv2.x += iResolution.x/iResolution.y;\n    uv2.x -= 2.0*mod(iTime,1.0*iResolution.x/iResolution.y);\n    float width = -(1.0/(25.0*uv2.x));\n    vec3 l = vec3(width , width* 1.9, width * 1.5);\n    \n    uv.y *= 2.0;\n    float xx = abs(1.0/(20.0*max(abs(uv.x),0.3)));\n    \n    uv.x *=3.0;\n    uv.y -= xx*(sin(uv.x)+3.0*sin(2.0*uv.x)+2.0*sin(3.0*uv.x)+sin(4.0*uv.x));\n    vec3 col = mix(vec3(1),vec3(0),smoothstep(0.02,0.03,abs(uv.y)));\n    fragColor = vec4(col*l,1.0);\n  }\n\n  \n\n  void main () {\n    #if _USE_ETC1_TEXTURE\n    #endif\n\n    mainImage(gl_FragColor, v_uv0, c_resolution, c_time);\n  }\n\n\n"
+    }
+  ],
+  "subMetas": {}
+}

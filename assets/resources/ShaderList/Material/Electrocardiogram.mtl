@@ -4,14 +4,14 @@
   "_objFlags": 0,
   "_native": "",
   "_effectAsset": {
-    "__uuid__": "b069ad76-f69d-44ec-9994-5e0aedbfb671"
+    "__uuid__": "3c4c81ba-5884-4e78-b482-f5d033ef3f94"
   },
   "_defines": {},
   "_props": {
     "c_resolution": {
       "__type__": "cc.Vec2",
-      "x": 128,
-      "y": 128
+      "x": 1,
+      "y": 1
     }
   }
 }
