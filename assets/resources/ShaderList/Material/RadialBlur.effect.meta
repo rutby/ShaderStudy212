@@ -1,0 +1,11 @@
+{
+  "ver": "1.0.15",
+  "uuid": "1158f0da-64dc-4afd-a143-159e2d71ac54",
+  "compiledShaders": [
+    {
+      "vert": "\n#define _IS_VERT_SHADER 1\n\n  precision highp float;\n\n  uniform mat4 cc_matViewProj;\n  attribute vec3 a_position;\n  attribute lowp vec4 a_color;\n  attribute mediump vec2 a_uv0;\n  varying mediump vec2 v_uv0;\n  varying lowp vec4 v_color;\n\n  void main () {\n    vec4 pos = vec4(a_position, 1);\n    pos = cc_matViewProj * pos;\n\n    v_uv0 = a_uv0;\n    v_color = a_color;\n\n    gl_Position = pos;\n  }\n\n\n",
+      "frag": "\n#define _IS_FRAG_SHADER 1\n\n  precision highp float;\n\n  uniform sampler2D texture;\n  varying mediump vec2 v_uv0;\n  varying lowp vec4 v_color;\n\n  uniform vec2 c_resolution;\n  uniform float c_time;\n\n  \n  void mainImage( out vec4 fragColor, in vec2 fragCoord, in vec2 iCenter, in float iTime )\n  {\n    \n    float Strength = 0.125;\n    const int Samples =8; \n    \n    vec2 uv = fragCoord.xy;\n    \n    vec2 dir = (fragCoord.xy-iCenter.xy);\n    \n    vec4 color0 = texture2D(texture,uv);\n\n    vec4 color1 = vec4(0.0,0.0,0.0,0.0);\n    for (int i = 0; i < Samples; i += 2) \n    {\n      color1 += texture2D(texture,uv+float(i)/float(Samples)*dir*Strength);\n      color1 += texture2D(texture,uv+float(i+1)/float(Samples)*dir*Strength);\n    }\n    color1 = color1/float(Samples);\n\n    fragColor = mix(color0, color1, smoothstep(0.2-0.05, 0.2+0.05, length(dir)));\n  }\n  \n\n  void main () {\n    #if _USE_ETC1_TEXTURE\n    #endif\n\n    mainImage(gl_FragColor, v_uv0, vec2(0.5, 0.5), c_time);\n  }\n\n\n"
+    }
+  ],
+  "subMetas": {}
+}
