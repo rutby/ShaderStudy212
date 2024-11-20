@@ -32,6 +32,6 @@ export default class SpineRuntime extends cc.Component {
         // this.spineCat.addAnimation(0, 'cat_level3_idle2', true);
 
         this.spineCat.setAnimation(0, 'act1', false);
-        // this.spineCat.addAnimation(0, 'idle1', true);
+        this.spineCat.addAnimation(0, 'idle1', true);
     }
 }
