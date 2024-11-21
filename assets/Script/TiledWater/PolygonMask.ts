@@ -45,5 +45,12 @@ export default class PolygonMask extends cc.Component {
         } else {
             graphics.fill();
         }
+
+        // graphics.rect(x, y, width, height);
+        // if (cc.game.renderType === cc.game.RENDER_TYPE_CANVAS) {
+        //     graphics.stroke();
+        // } else {
+        //     graphics.fill();
+        // }
     }
 }
