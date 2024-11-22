@@ -54,3 +54,26 @@ export default class PolygonMask extends cc.Component {
         // }
     }
 }
+
+/**
+ * 
+precision highp float;
+vec4 CCFragOutput (vec4 color) {
+ return color;
+}
+varying vec2 v_uv;
+  uniform vec4 color;
+#define pi 3.1415
+float sdRoundBox( vec2 p, vec2 b, float r )
+{
+ vec2 q = abs(p) - b + r;
+ return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - r;
+}
+vec4 frag() {
+ float d = sdRoundBox((v_uv - 0.5), vec2(0.5, 0.5), 0.3);
+ vec3 col = vec3(1.0) - sign(d)*vec3(1., 1., 1.);
+ col *= 1. - exp(-2.0*abs(d));
+ return CCFragOutput(vec4(col, 1.));
+}
+void main() { gl_FragColor = frag(); }
+ */
