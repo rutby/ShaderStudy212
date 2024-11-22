@@ -2,16 +2,11 @@
 const { ccclass, property, menu, executeInEditMode } = cc._decorator;
 
 @ccclass
-export default class OffScreen extends cc.Component {
-    @property(cc.Node) nodeRoot: cc.Node = null;
+export default class FrameBlit extends cc.Component {
+    @property([cc.Sprite]) spFrames: cc.Sprite[] = [];
     @property(cc.Sprite) spTarget: cc.Sprite = null;
 
-    private _rt: cc.RenderTexture = null;
     protected onLoad(): void {
-        this.getComponent(cc.Camera).enabled = false;
-        this._rt = new cc.RenderTexture();
-        this._rt.initWithSize(516, 516);
-
         CC_PREVIEW && cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onEventKeyDown, this);
     }
 
@@ -20,22 +15,17 @@ export default class OffScreen extends cc.Component {
     }
 
     //================================================ private
-    
     private restart() {
-        this.getComponent(cc.Camera).enabled = true;
+        let rt = new cc.RenderTexture();
+        rt.initWithSize(512, 512);
 
-        let camera = this.getComponent(cc.Camera);
-        camera.targetTexture = this._rt;
-        camera.render(this.nodeRoot);
-        camera.targetTexture = null;
+        this.blit(this.spFrames[0], rt, 0, 0);
+        this.blit(this.spFrames[1], rt, 100, 0);
+        cc.dynamicAtlasManager.getFrameBlit().update();
 
-        let w = 171;
-        let h = 172; 
         let sf = new cc.SpriteFrame();
-        sf.setTexture(this._rt, cc.rect(w * 0, h * 0, w, h));
+        sf.setTexture(rt);
         this.spTarget.spriteFrame = sf;
-
-        this.getComponent(cc.Camera).enabled = false;
     }
 
     //================================================ events
@@ -47,15 +37,30 @@ export default class OffScreen extends cc.Component {
                 this.restart();
                 break;
             }
-            case 'F'.charCodeAt(0): {
-                this.showRenderTexture(this._rt);
-                break;
-            }
         }
     }
 
     //================================================ utils
+    private blit(sprite: cc.Sprite, rt: cc.RenderTexture, x: number, y: number) {
+        let frameBlit = cc.dynamicAtlasManager.getFrameBlit();
+
+        let spriteFrame = sprite.spriteFrame;
+        let srcTexture = spriteFrame.getTexture();
+        let dstTexture = rt;
+        let frameW = spriteFrame._rect.width;
+        let frameH = spriteFrame._rect.height;
+
+        let tmpUV = [];
+        spriteFrame.calculateFrameUV(tmpUV);
+
+        frameBlit.blit(srcTexture, dstTexture, x, y, srcTexture.width, srcTexture.height, dstTexture.width, dstTexture.height, frameW, frameH, tmpUV, 1);
+    }
+
     private showRenderTexture(rt: cc.RenderTexture, name = null) {
+        // let camera = this.getComponent(cc.Camera);
+        // camera.targetTexture = rt;
+        // camera.render(this.nodeRoot);
+        // camera.targetTexture = null;
         if (CC_PREVIEW) {
             let theName = name || Math.random().toFixed(7);
             let newWin = window.open("", theName);
