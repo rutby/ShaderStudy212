@@ -1,0 +1,11 @@
+{
+  "ver": "1.0.15",
+  "uuid": "2e1df2d4-2261-4fd0-8ca3-9cb953fec3cf",
+  "compiledShaders": [
+    {
+      "vert": "\n#define _IS_VERT_SHADER 1\n\n  precision highp float;\n\n  uniform mat4 cc_matViewProj;\n  attribute vec3 a_position;\n  attribute lowp vec4 a_color;\n  attribute mediump vec2 a_uv0;\n  attribute float a_texture_idx;\n  attribute lowp vec4 a_color_outline;\n\n  varying mediump vec2 v_uv0;\n  varying lowp vec4 v_color;\n  varying float v_texture_idx;\n  varying lowp vec4 v_color_outline;\n\n  void main () {\n    vec4 pos = vec4(a_position, 1);\n    pos = cc_matViewProj * pos;\n\n    v_uv0 = a_uv0;\n    v_color = a_color;\n    v_texture_idx = a_texture_idx;\n    v_color_outline = a_color_outline;\n\n    gl_Position = pos;\n  }\n\n\n",
+      "frag": "\n#define _IS_FRAG_SHADER 1\n\n  precision highp float;\n\n  uniform sampler2D texture;\n  uniform sampler2D texture1;\n  uniform sampler2D texture2;\n  uniform sampler2D texture3;\n  uniform sampler2D texture4;\n  uniform sampler2D texture5;\n  uniform sampler2D texture6;\n  uniform sampler2D texture7;\n\n  varying mediump vec2 v_uv0;\n  varying lowp vec4 v_color;\n  varying float v_texture_idx;\n  varying lowp vec4 v_color_outline;\n\n  void main () {\n    #if _USE_ETC1_TEXTURE\n    #endif\n\n    vec4 o;;\n    if (v_texture_idx <= 0.0) {         \n      o = texture2D(texture, v_uv0);\n      o *= v_color;\n    } else if (v_texture_idx <= 1.0) {  \n      vec4 colorFont = texture2D(texture1, v_uv0);\n      o = v_color_outline * vec4(1.0 - colorFont.r, 1.0 - colorFont.r, 1.0 - colorFont.r, colorFont.a) + v_color * colorFont;\n      o.a *= v_color.a;\n    } else if (v_texture_idx <= 2.0) {  \n      o = texture2D(texture2, v_uv0);\n      o *= v_color;\n    } else if (v_texture_idx <= 3.0) {  \n      o = texture2D(texture, v_uv0);\n      float gray = 0.2126*o.r + 0.7152*o.g + 0.0722*o.b;\n      o = vec4(gray, gray, gray, o.a);\n    } else if (v_texture_idx <= 4.0) {\n      o = texture2D(texture4, v_uv0);\n    } else if (v_texture_idx <= 5.0) {\n      o = texture2D(texture5, v_uv0);\n    } else if (v_texture_idx <= 6.0) {\n      o = texture2D(texture6, v_uv0);\n    } else if (v_texture_idx <= 7.0) {\n      o = texture2D(texture7, v_uv0);\n    }\n\n    gl_FragColor = o;\n  }\n\n\n"
+    }
+  ],
+  "subMetas": {}
+}

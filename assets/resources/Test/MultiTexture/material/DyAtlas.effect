@@ -1,0 +1,135 @@
+// Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.  
+
+// Note: Current format version is experiment, the format may be changed.
+// The future format may not be compatible, you may need to update the script manually.
+
+// 注意：当前版本的格式是实验性的，之后还会进行修改。
+// 后续版本的格式不保证兼容当前格式，可能需要手动升级到最新版本。，
+%{
+  techniques: [
+    {
+      passes: [
+        {
+          vert: vs
+          frag: fs
+          cullMode: none
+          blend: true
+        }
+      ]
+      layer: 0
+    }
+  ]
+  properties: {
+    texture: {
+      type: sampler2D
+      value: null
+    }
+    texture1: {
+      type: sampler2D
+      value: null
+    }
+    texture2: {
+      type: sampler2D
+      value: null
+    }
+    texture3: {
+      type: sampler2D
+      value: null
+    }
+    texture4: {
+      type: sampler2D
+      value: null
+    }
+    texture5: {
+      type: sampler2D
+      value: null
+    }
+    texture6: {
+      type: sampler2D
+      value: null
+    }
+    texture7: {
+      type: sampler2D
+      value: null
+    }
+  }
+%}
+
+%% vs {
+
+  precision highp float;
+
+  uniform mat4 cc_matViewProj;
+  attribute vec3 a_position;
+  attribute lowp vec4 a_color;
+  attribute mediump vec2 a_uv0;
+  attribute float a_texture_idx;
+  attribute lowp vec4 a_color_outline;
+
+  varying mediump vec2 v_uv0;
+  varying lowp vec4 v_color;
+  varying float v_texture_idx;
+  varying lowp vec4 v_color_outline;
+
+  void main () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+
+    v_uv0 = a_uv0;
+    v_color = a_color;
+    v_texture_idx = a_texture_idx;
+    v_color_outline = a_color_outline;
+
+    gl_Position = pos;
+  }
+}
+
+%% fs {
+  precision highp float;
+
+  uniform sampler2D texture;
+  uniform sampler2D texture1;
+  uniform sampler2D texture2;
+  uniform sampler2D texture3;
+  uniform sampler2D texture4;
+  uniform sampler2D texture5;
+  uniform sampler2D texture6;
+  uniform sampler2D texture7;
+
+  varying mediump vec2 v_uv0;
+  varying lowp vec4 v_color;
+  varying float v_texture_idx;
+  varying lowp vec4 v_color_outline;
+
+  void main () {
+    #if _USE_ETC1_TEXTURE
+    #endif
+
+    vec4 o;;
+    if (v_texture_idx <= 0.0) {         // render-texture
+      o = texture2D(texture, v_uv0);
+      o *= v_color;
+    } else if (v_texture_idx <= 1.0) {  // titleMain
+      vec4 colorFont = texture2D(texture1, v_uv0);
+      o = v_color_outline * vec4(1.0 - colorFont.r, 1.0 - colorFont.r, 1.0 - colorFont.r, colorFont.a) + v_color * colorFont;
+      o.a *= v_color.a;
+    } else if (v_texture_idx <= 2.0) {  // wm_labels
+      o = texture2D(texture2, v_uv0);
+      o *= v_color;
+    } else if (v_texture_idx <= 3.0) {  // render-texture-gray
+      o = texture2D(texture, v_uv0);
+      float gray = 0.2126*o.r + 0.7152*o.g + 0.0722*o.b;
+      o = vec4(gray, gray, gray, o.a);
+    } else if (v_texture_idx <= 4.0) {
+      o = texture2D(texture4, v_uv0);
+    } else if (v_texture_idx <= 5.0) {
+      o = texture2D(texture5, v_uv0);
+    } else if (v_texture_idx <= 6.0) {
+      o = texture2D(texture6, v_uv0);
+    } else if (v_texture_idx <= 7.0) {
+      o = texture2D(texture7, v_uv0);
+    }
+
+    gl_FragColor = o;
+  }
+}
