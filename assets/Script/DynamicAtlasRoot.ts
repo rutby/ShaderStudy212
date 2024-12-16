@@ -53,7 +53,6 @@ export default class DynamicAtlasRoot extends cc.Component {
     //================================================ instance
     @property(cc.Integer) textureSize: number = 1024;
     @property(cc.Integer) frameSize: number = 512;
-    @property(cc.Boolean) debug: boolean = false;
 
     private _atlasIndex: number     = 0;
 
@@ -67,41 +66,16 @@ export default class DynamicAtlasRoot extends cc.Component {
     }
 
     protected onLoad(): void {
-        if (!this.debug) {
-            return;
-        }
-
         this._atlasIndex = DynamicAtlasRoot.generate(this.textureSize, this.frameSize);
         if (this._atlasIndex == -1) {
             console.warn('[DynamicAtlas]', `dynamic atlas count reach max count: ${maxAtlasCount}`);
             return;
         }
 
-        this.getMaterial((material) => {
-            if (cc.isValid(this.node)) {
-                // @ts-ignore
-                this.node.mp_sortedLayer_enabled = true;
-                // @ts-ignore
-                this.node.mp_sortedLayer_atlasIndex = this._atlasIndex;
-                // @ts-ignore
-                this.node.mp_sortedLayer_material = cc.Material.getInstantiatedMaterial(material, this);
-            }
-        })
-    }
-
-    //================================================ private
-    private getMaterial(callback?: Function) {
-        let key = 'Test/MultiTexture/material/DyAtlas';
-        let material = cc.loader.getRes(key, cc.Material);
-        if (!material) {
-            cc.loader.loadRes(key, cc.Material, (err, res) => {
-                if (!err) {
-                    callback(res);
-                }
-            });
-        } else {
-            callback(material);
-        }
+        // @ts-ignore
+        this.node.mp_sortedLayer_enabled = true;
+        // @ts-ignore
+        this.node.mp_sortedLayer_atlasIndex = this._atlasIndex;
     }
 }
 
