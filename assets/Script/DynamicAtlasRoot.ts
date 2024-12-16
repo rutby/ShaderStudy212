@@ -72,13 +72,39 @@ export default class DynamicAtlasRoot extends cc.Component {
             return;
         }
 
-        // @ts-ignore
-        this.node.mp_sortedLayer_enabled = true;
-        // @ts-ignore
-        this.node.mp_sortedLayer_atlasIndex = this._atlasIndex;
+        this.getMaterial((material) => {
+            if (cc.isValid(this.node)) {
+                // @ts-ignore
+                this.node.mp_sortedLayer_enabled = true;
+                // @ts-ignore
+                this.node.mp_sortedLayer_atlasIndex = this._atlasIndex;
+                // @ts-ignore
+                this.node.mp_sortedLayer_material = cc.Material.getInstantiatedMaterial(material, this);
+            }
+        })
+    }
+
+    //================================================ private
+    private getMaterial(callback?: Function) {
+        let key = 'Test/MultiTexture/material/DyAtlas';
+        let material = cc.loader.getRes(key, cc.Material);
+        if (!material) {
+            cc.loader.loadRes(key, cc.Material, (err, res) => {
+                if (!err) {
+                    callback(res);
+                }
+            });
+        } else {
+            callback(material);
+        }
     }
 }
 
 if (CC_PREVIEW) {
     window['DynamicAtlasRoot'] = DynamicAtlasRoot;
 }
+
+cc.Label.setDyAtlasMap && cc.Label.setDyAtlasMap({
+    ['titleMain']: 1,
+    ['wm_labels']: 2,
+})
