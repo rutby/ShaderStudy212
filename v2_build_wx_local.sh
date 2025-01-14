@@ -1,0 +1,1 @@
+sh ./v2_build_wx.sh /Users/backlly/Workspace/212 ct_dev_212 tccli

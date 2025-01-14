@@ -9,6 +9,8 @@ export default class TextureCompress extends cc.Component {
     @property(cc.Label) lbExtPvr: cc.Label = null;
 
     protected update(dt: number): void {
+        cc.dynamicAtlasManager.enabled = true;
+
         if (this.spTest.spriteFrame) {
             this.lbFormat.string = this.spTest.spriteFrame.getTexture().getPixelFormat() + '';
         }

@@ -39,7 +39,7 @@
   "title": "hello_world",
   "webOrientation": "auto",
   "wechatgame": {
-    "REMOTE_SERVER_ROOT": "",
+    "REMOTE_SERVER_ROOT": "https://kddql.beefungames.com/wx/cdn_path",
     "appid": "wx100c3f1a898ad04b",
     "orientation": "portrait",
     "separate_engine": false,
